@@ -9,6 +9,8 @@ import fs from 'fs';
 import path from 'path';
 
 const GOOGLE_SERVICE_ACCOUNT_EMAIL = process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL;
+const GOOGLE_PROJECT_ID = process.env.GOOGLE_PROJECT_ID;
+
 // Handle both \n literals (from .env) and actual newlines (from Cloudflare Pages env vars)
 const rawKey = process.env.GOOGLE_PRIVATE_KEY;
 if (!rawKey) {
