@@ -2,28 +2,35 @@
 // LandingPage.astro - Main landing page component
 import ZineCard from "./ZineCard.astro";
 import type { Zine } from "../types";
+import { parseCSVFile } from "../lib/csv";
 import rudiLogo from "../assets/rudi-logo.png";
 import rudiTitle from "../assets/rudi-title.png";
 
 // Get all zine images from the zines subdirectory
 const allZineImages = import.meta.glob('../assets/zines/*.{png,jpg,jpeg,webp}', { eager: true });
 
-// Simple zine data with just title and image filename
-// To migrate to Google Sheet: fetch sheet → use imageFilename to match from allZineImages
-const zineData = [
-  { title: "Do some real ally shit", imageFilename: "Ally zine.png" },
-  { title: "Writings of the Van 5", imageFilename: "Writings of Van 5 Zine.png" },
-  { title: "Kashmir", imageFilename: "Kashmir Zine.png" },
-  { title: "Gustafsen Lake Crisis", imageFilename: "Gustafsen Lake Zine.png" },
-];
+// Load zine data from CSV
+const csvData = await parseCSVFile('zines.csv');
 
-// Resolve images from glob by matching filename
-const zines: Zine[] = zineData.map((zine) => {
-  const matchedImage = Object.values(allZineImages).find((img) => 
-    (img as any).default?.src?.includes(zine.imageFilename)
-  );
+// Map CSV data to Zine type and resolve images from glob
+const zines: Zine[] = csvData.map((row) => {
+  // Match image by adding common extensions
+  const imageExtensions = ['.png', '.jpg', '.jpeg', '.webp'];
+  let matchedImage;
+  
+  for (const ext of imageExtensions) {
+    matchedImage = Object.values(allZineImages).find((img) => 
+      (img as any).default?.src?.includes(row.imageFilename + ext)
+    );
+    if (matchedImage) break;
+  }
+  
   return {
-    title: zine.title,
+    title: row.title,
+    imageFilename: row.imageFilename,
+    author: row.author || undefined,
+    description: row.description || undefined,
+    uploadDate: row.uploadDate || undefined,
     image: matchedImage ? (matchedImage as any).default : undefined
   };
 });
