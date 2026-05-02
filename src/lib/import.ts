@@ -84,6 +84,19 @@ try {
   console.log('   ✗ Key fails with Node crypto:', e.message);
 }
 
+// Also try loading with crypto's parseKey method (different approach)
+try {
+  const crypto = await import('crypto');
+  const keyObject = crypto.createPrivateKey({
+    key: rawKey,
+    format: 'pem',
+    type: 'pkcs8'
+  });
+  console.log('   ✓ Key loads with explicit pkcs8 option');
+} catch (e) {
+  console.log('   ✗ Explicit pkcs8 option fails:', e.message);
+}
+
 // Convert \n literals to actual newlines if present
 const GOOGLE_PRIVATE_KEY = rawKey.includes('\\n') 
   ? rawKey.replace(/\\n/g, '\n') 
