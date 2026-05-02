@@ -42,18 +42,22 @@ const pemFooter = '-----END PRIVATE KEY-----';
 const base64Content = rawKey.replace(pemHeader, '').replace(pemFooter, '').replace(/\n/g, '').replace(/\r/g, '');
 console.log('   Base64 content length:', base64Content.length);
 
-// Check if base64 is valid
+// Check if base64 is valid using Buffer
 try {
-  const atob = require('atob');
-  const decoded = atob(base64Content);
+  const decoded = Buffer.from(base64Content, 'base64');
   console.log('   Base64 decodes OK, length:', decoded.length);
   
   // Check first few bytes of the decoded ASN.1 structure
-  const firstBytes = decoded.slice(0, 20).split('').map(c => c.charCodeAt(0).toString(16).padStart(2, '0')).join(' ');
+  const firstBytes = decoded.slice(0, 20).toString('hex').match(/.{2}/g)?.join(' ') || '';
   console.log('   Decoded first 20 bytes (hex):', firstBytes);
 } catch (e) {
   console.log('   Base64 decode fails:', e.message);
 }
+
+// Also check the raw PEM content for any issues
+const lines = rawKey.split('\n');
+console.log('   Number of lines in PEM:', lines.length);
+console.log('   Last line:', lines[lines.length - 1]);
 
 // Test if Node's crypto can load the key
 try {
