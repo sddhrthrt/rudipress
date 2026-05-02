@@ -19,8 +19,6 @@ if (!rawKey) {
 
 console.log('   Node.js version:', process.version);
 console.log('   Key length:', rawKey.length);
-console.log('   Has actual newlines:', rawKey.includes('\n'));
-console.log('   Full key:\n', rawKey);
 
 // Test if Node's crypto can load the key
 try {
