@@ -7,31 +7,29 @@ import rudiLogo from "../assets/rudi-logo.png";
 import rudiTitle from "../assets/rudi-title.png";
 
 // Get all zine images from the zines subdirectory
-const allZineImages = import.meta.glob('../assets/zines/*.{png,jpg,jpeg,webp}', { eager: true });
+const allZineImages = import.meta.glob(
+  "../assets/zines/*.{png,jpg,jpeg,webp}",
+  { eager: true },
+);
 
 // Load zine data from CSV
-const csvData = await parseCSVFile('zines.csv');
+const csvData = await parseCSVFile("zines.csv");
 
 // Map CSV data to Zine type and resolve images from glob
 const zines: Zine[] = csvData.map((row) => {
-  // Match image by adding common extensions
-  const imageExtensions = ['.png', '.jpg', '.jpeg', '.webp'];
   let matchedImage;
-  
-  for (const ext of imageExtensions) {
-    matchedImage = Object.values(allZineImages).find((img) => 
-      (img as any).default?.src?.includes(row.imageFilename + ext)
-    );
-    if (matchedImage) break;
-  }
-  
+
+  matchedImage = Object.values(allZineImages).find((img) =>
+    (img as any).default?.src?.includes(row.imageFilename),
+  );
+
   return {
     title: row.title,
     imageFilename: row.imageFilename,
     author: row.author || undefined,
     description: row.description || undefined,
     uploadDate: row.uploadDate || undefined,
-    image: matchedImage ? (matchedImage as any).default : undefined
+    image: matchedImage ? (matchedImage as any).default : undefined,
   };
 });
 ---
@@ -56,7 +54,7 @@ const zines: Zine[] = csvData.map((row) => {
 
 <div class="container mx-auto px-4">
   <!-- About Section -->
-  <section class="mt-8 py-8 max-w-2/3 mx-auto text-center">
+  <section class="mt-8 py-8 px-4 max-w-full md:max-w-2/3 mx-auto text-center">
     Rudi Press is an independent publication based out of unnceded territories
     of the xʷməθkʷəy̓əm (Musqueam), Sḵwx̱wú7mesh (Squamish), and səlilwətaɬ
     (Tsleil-Waututh) Nations. The people of these nations have stewarded the

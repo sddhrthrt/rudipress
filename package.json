@@ -17,5 +17,8 @@
     "astro": "^6.2.1",
     "daisyui": "^5.5.19",
     "tailwindcss": "^4.2.4"
+  },
+  "devDependencies": {
+    "wrangler": "^4.87.0"
   }
 }
