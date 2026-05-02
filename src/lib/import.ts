@@ -9,7 +9,18 @@ import fs from 'fs';
 import path from 'path';
 
 const GOOGLE_SERVICE_ACCOUNT_EMAIL = process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL;
-const GOOGLE_PRIVATE_KEY = process.env.GOOGLE_PRIVATE_KEY?.replace(/\\n/g, '\n');
+// Handle both \n literals (from .env) and actual newlines (from Cloudflare Pages env vars)
+const rawKey = process.env.GOOGLE_PRIVATE_KEY;
+if (!rawKey) {
+  throw new Error('GOOGLE_PRIVATE_KEY is not set');
+}
+
+// Debug: check what format the key is in
+const hasEscapedNewlines = rawKey.includes('\\n');
+console.log('   Key format check - has \\n literals:', hasEscapedNewlines);
+console.log('   Key starts with:', rawKey.substring(0, 30));
+
+const GOOGLE_PRIVATE_KEY = rawKey.replace(/\\n/g, '\n');
 const FOLDER_ID = '13Pl43Fk20SO_J1al84v90xVAZyAC0E9R';
 
 const ZINES_DIR = './src/assets/zines';
