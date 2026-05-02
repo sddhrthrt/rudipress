@@ -5,12 +5,11 @@ import type { Zine } from "../types";
 import rudiLogo from "../assets/rudi-logo.png";
 import rudiTitle from "../assets/rudi-title.png";
 
-// Get all zine images from assets - glob pattern for future Google Sheets compatibility
-// The filename matching approach makes it easy to populate from external data sources
-const allImages = import.meta.glob('../assets/*Zine*.{png,jpg,jpeg,webp}', { eager: true });
+// Get all zine images from the zines subdirectory
+const allZineImages = import.meta.glob('../assets/zines/*.{png,jpg,jpeg,webp}', { eager: true });
 
 // Simple zine data with just title and image filename
-// To migrate to Google Sheet: fetch sheet → use imageFilename to match from allImages
+// To migrate to Google Sheet: fetch sheet → use imageFilename to match from allZineImages
 const zineData = [
   { title: "Do some real ally shit", imageFilename: "Ally zine.png" },
   { title: "Writings of the Van 5", imageFilename: "Writings of Van 5 Zine.png" },
@@ -20,7 +19,7 @@ const zineData = [
 
 // Resolve images from glob by matching filename
 const zines: Zine[] = zineData.map((zine) => {
-  const matchedImage = Object.values(allImages).find((img) => 
+  const matchedImage = Object.values(allZineImages).find((img) => 
     (img as any).default?.src?.includes(zine.imageFilename)
   );
   return {
