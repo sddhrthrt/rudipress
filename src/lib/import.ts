@@ -15,12 +15,14 @@ if (!rawKey) {
   throw new Error('GOOGLE_PRIVATE_KEY is not set');
 }
 
-// Debug: check what format the key is in
-const hasEscapedNewlines = rawKey.includes('\\n');
-console.log('   Key format check - has \\n literals:', hasEscapedNewlines);
-console.log('   Key starts with:', rawKey.substring(0, 30));
+console.log('   Node.js version:', process.version);
+console.log('   Key length:', rawKey.length);
+console.log('   Has actual newlines:', rawKey.includes('\n'));
 
-const GOOGLE_PRIVATE_KEY = rawKey.replace(/\\n/g, '\n');
+// Convert \n literals to actual newlines if present
+const GOOGLE_PRIVATE_KEY = rawKey.includes('\\n') 
+  ? rawKey.replace(/\\n/g, '\n') 
+  : rawKey;
 const FOLDER_ID = '13Pl43Fk20SO_J1al84v90xVAZyAC0E9R';
 
 const ZINES_DIR = './src/assets/zines';
