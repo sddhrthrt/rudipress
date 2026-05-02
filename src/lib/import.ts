@@ -22,6 +22,16 @@ console.log('   Key length:', rawKey.length);
 console.log('   Has actual newlines:', rawKey.includes('\n'));
 console.log('   Full key:\n', rawKey);
 
+// Test if Node's crypto can load the key
+try {
+  const crypto = await import('crypto');
+  const keyObject = crypto.createPrivateKey(rawKey);
+  console.log('   ✓ Key loads OK with Node crypto');
+  console.log('   Key type:', keyObject.asymmetricKeyType);
+} catch (e) {
+  console.log('   ✗ Key fails with Node crypto:', e.message);
+}
+
 // Convert \n literals to actual newlines if present
 const GOOGLE_PRIVATE_KEY = rawKey.includes('\\n') 
   ? rawKey.replace(/\\n/g, '\n') 
