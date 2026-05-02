@@ -59,12 +59,27 @@ const lines = rawKey.split('\n');
 console.log('   Number of lines in PEM:', lines.length);
 console.log('   Last line:', lines[lines.length - 1]);
 
-// Test if Node's crypto can load the key
+// Test if Node's crypto can load the key in different formats
 try {
   const crypto = await import('crypto');
-  const keyObject = crypto.createPrivateKey(rawKey);
-  console.log('   ✓ Key loads OK with Node crypto');
-  console.log('   Key type:', keyObject.asymmetricKeyType);
+  
+  // Try original format
+  try {
+    const keyObject1 = crypto.createPrivateKey(rawKey);
+    console.log('   ✓ Key loads as PKCS#8');
+    console.log('   Key type:', keyObject1.asymmetricKeyType);
+  } catch (e1) {
+    console.log('   ✗ PKCS#8 fails:', e1.message);
+    
+    // Try converting to PKCS#1 format
+    try {
+      const keyObject2 = crypto.createPrivateKey(rawKey.replace('-----BEGIN PRIVATE KEY-----', '-----BEGIN RSA PRIVATE KEY-----').replace('-----END PRIVATE KEY-----', '-----END RSA PRIVATE KEY-----'));
+      console.log('   ✓ Key loads as PKCS#1 (RSA)');
+      console.log('   Key type:', keyObject2.asymmetricKeyType);
+    } catch (e2) {
+      console.log('   ✗ PKCS#1 also fails:', e2.message);
+    }
+  }
 } catch (e) {
   console.log('   ✗ Key fails with Node crypto:', e.message);
 }
