@@ -1,7 +1,7 @@
 // Import zines from Google Drive
 // This runs at build time in Astro's frontmatter
 import 'dotenv/config';
-import { JWT } from 'google-auth-library';
+import { JWT, GoogleAuth } from 'google-auth-library';
 import { drive } from '@googleapis/drive';
 import pkg from '@googleapis/sheets';
 const { sheets } = pkg;
@@ -31,14 +31,19 @@ const DATA_FILE = './src/data/zines.csv';
 export async function downloadZinesFromDrive() {
   console.log('📥 Downloading zines from Google Drive...');
 
-  const client = new JWT({
-    email: GOOGLE_SERVICE_ACCOUNT_EMAIL,
-    key: GOOGLE_PRIVATE_KEY,
+  // Use GoogleAuth - handles auth more robustly
+  const auth = new GoogleAuth({
+    credentials: {
+      client_email: GOOGLE_SERVICE_ACCOUNT_EMAIL,
+      private_key: GOOGLE_PRIVATE_KEY,
+    },
     scopes: [
       'https://www.googleapis.com/auth/drive.readonly',
       'https://www.googleapis.com/auth/spreadsheets.readonly',
     ],
   });
+
+  const client = await auth.getClient();
 
   const driveClient = drive({ version: 'v3', auth: client });
   const sheetsClient = sheets({ version: 'v4', auth: client });
