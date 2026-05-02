@@ -3,6 +3,9 @@ dist/
 
 .wrangler
 
+# Task planning
+.tasks/
+
 # generated types
 .astro/
 
