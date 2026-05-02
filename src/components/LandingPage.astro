@@ -3,8 +3,12 @@
 import ZineCard from "./ZineCard.astro";
 import type { Zine } from "../types";
 import { parseCSVFile } from "../lib/csv";
+import { downloadZinesFromDrive } from "../lib/import";
 import rudiLogo from "../assets/rudi-logo.png";
 import rudiTitle from "../assets/rudi-title.png";
+
+// Download zines from Google Drive at build time
+await downloadZinesFromDrive();
 
 // Get all zine images from the zines subdirectory
 const allZineImages = import.meta.glob(
@@ -12,7 +16,7 @@ const allZineImages = import.meta.glob(
   { eager: true },
 );
 
-// Load zine data from CSV
+// Load zine data from CSV (now locally available after download)
 const csvData = await parseCSVFile("zines.csv");
 
 // Map CSV data to Zine type and resolve images from glob

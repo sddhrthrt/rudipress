@@ -6,6 +6,10 @@ dist/
 # Task planning
 .tasks/
 
+# Downloaded zine data (imported from Google Drive at build time)
+src/data/zines.csv
+src/assets/zines/*
+
 # generated types
 .astro/
 

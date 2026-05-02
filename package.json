@@ -19,6 +19,10 @@
     "tailwindcss": "^4.2.4"
   },
   "devDependencies": {
+    "@googleapis/drive": "^20.1.0",
+    "@googleapis/sheets": "^13.0.1",
+    "dotenv": "^17.4.2",
+    "google-auth-library": "^10.6.2",
     "wrangler": "^4.87.0"
   }
 }
