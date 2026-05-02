@@ -1,0 +1,40 @@
+---
+// ZineCard.astro - Individual zine card component
+import { Image } from "astro:assets";
+import type { Zine } from "../types";
+
+interface Props {
+  zine: Zine;
+}
+
+const { zine } = Astro.props;
+---
+
+<div class="flex flex-col items-center hover:-translate-y-1 transition-transform duration-200">
+  <!-- Thumbnail as rounded card -->
+  <div class="card w-40 bg-base-200 shadow-lg">
+    <figure class="aspect-2/3 rounded-t-box overflow-hidden">
+      {zine.image ? (
+        <Image
+          src={zine.image}
+          alt={zine.title}
+          class="w-full h-full object-cover"
+        />
+      ) : (
+        <img
+          src="https://picsum.photos/200/300"
+          alt={zine.title}
+          class="w-full h-full object-cover"
+        />
+      )}
+    </figure>
+  </div>
+  
+  <!-- Text outside the card -->
+  <div class="mt-2 text-center">
+    <h3 class="text-sm font-semibold text-base-content line-clamp-2">
+      {zine.title}
+    </h3>
+    <p class="text-xs text-neutral">{zine.author}</p>
+  </div>
+</div>

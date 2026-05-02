@@ -1,0 +1,59 @@
+---
+// LandingPage.astro - Main landing page component
+import ZineCard from "./ZineCard.astro";
+import type { Zine } from "../types";
+import rudiLogo from "../assets/rudi-logo.png";
+import rudiTitle from "../assets/rudi-title.png";
+
+// Get all zine images from assets - glob pattern for future Google Sheets compatibility
+// The filename matching approach makes it easy to populate from external data sources
+const allImages = import.meta.glob('../assets/*Zine*.{png,jpg,jpeg,webp}', { eager: true });
+
+// Simple zine data with just title and image filename
+// To migrate to Google Sheet: fetch sheet → use imageFilename to match from allImages
+const zineData = [
+  { title: "Do some real ally shit", imageFilename: "Ally zine.png" },
+  { title: "Writings of the Van 5", imageFilename: "Writings of Van 5 Zine.png" },
+  { title: "Kashmir", imageFilename: "Kashmir Zine.png" },
+  { title: "Gustafsen Lake Crisis", imageFilename: "Gustafsen Lake Zine.png" },
+];
+
+// Resolve images from glob by matching filename
+const zines: Zine[] = zineData.map((zine) => {
+  const matchedImage = Object.values(allImages).find((img) => 
+    (img as any).default?.src?.includes(zine.imageFilename)
+  );
+  return {
+    title: zine.title,
+    image: matchedImage ? (matchedImage as any).default : undefined
+  };
+});
+---
+
+<!-- Header Section - Full width, centered -->
+<header class="py-8 w-full flex justify-center">
+  <!-- Logo and Title -->
+  <div class="flex items-center gap-2">
+    <img src={rudiLogo.src} alt="Rudi Press Logo" class="h-16" />
+    <img src={rudiTitle.src} alt="Rudi Press" class="h-16" />
+  </div>
+</header>
+
+<div class="container mx-auto px-4">
+  <!-- Hero Section -->
+  <section class="mt-8 py-8">
+    <div id="zines" class="flex flex-wrap justify-center gap-6 px-4">
+      {zines.map((zine) => <ZineCard zine={zine} />)}
+    </div>
+  </section>
+</div>
+
+<div class="container mx-auto px-4">
+  <!-- About Section -->
+  <section class="mt-8 py-8 max-w-2/3 mx-auto text-center">
+    Rudi Press is an independent publication based out of unnceded territories
+    of the xʷməθkʷəy̓əm (Musqueam), Sḵwx̱wú7mesh (Squamish), and səlilwətaɬ
+    (Tsleil-Waututh) Nations. The people of these nations have stewarded the
+    land since untold times, and we are an uninvited guest.
+  </section>
+</div>
