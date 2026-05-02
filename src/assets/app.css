@@ -1,4 +1,9 @@
 @import "tailwindcss";
+
+/* Explicit content detection for Tailwind 4 */
+@source "../";
+@source "../../src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue}";
+
 @plugin "daisyui" {
   themes: lemonade --default;
 }
