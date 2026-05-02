@@ -1,46 +1,93 @@
-# Astro Starter Kit: Basics
+# Rudi Press
 
-```sh
-npm create astro@latest -- --template basics
+An independent zine publication website built with [Astro](https://astro.build), [Tailwind CSS 4](https://tailwindcss.com), and [daisyUI 5](https://daisyui.com).
+
+## Tech Stack
+
+- **Astro** - Static site generator
+- **Tailwind CSS 4** - Utility-first CSS framework
+- **daisyUI 5** - Component library for Tailwind
+- **Cloudflare Pages** - Hosting platform
+
+## Getting Started
+
+### Prerequisites
+
+- Node.js 22.12.0 or higher
+
+### Installation
+
+```bash
+npm install
 ```
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+### Development
 
-## 🚀 Project Structure
-
-Inside of your Astro project, you'll see the following folders and files:
-
-```text
-/
-├── public/
-│   └── favicon.svg
-├── src
-│   ├── assets
-│   │   └── astro.svg
-│   ├── components
-│   │   └── Welcome.astro
-│   ├── layouts
-│   │   └── Layout.astro
-│   └── pages
-│       └── index.astro
-└── package.json
+```bash
+npx wrangler dev
 ```
 
-To learn more about the folder structure of an Astro project, refer to [our guide on project structure](https://docs.astro.build/en/basics/project-structure/).
+This starts a local dev server at `http://localhost:8787`.
 
-## 🧞 Commands
+### Build
 
-All commands are run from the root of the project, from a terminal:
+```bash
+npm run build
+```
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
+This builds the site to `./dist/`.
 
-## 👀 Want to learn more?
+### Deploy to Cloudflare Pages
 
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+```bash
+npm run build && npx wrangler deploy
+```
+
+## Project Structure
+
+```
+src/
+├── assets/           # Static assets
+│   ├── zines/       # Zine cover images
+│   ├── rudi-logo.png
+│   └── rudi-title.png
+├── components/     # Astro components
+│   ├── LandingPage.astro
+│   └── ZineCard.astro
+├── data/            # Data files
+│   └── zines.csv    # Zine data (title, image, author, etc.)
+├── layouts/         # Page layouts
+│   └── BaseLayout.astro
+├── lib/             # Utility functions
+│   └── csv.ts       # CSV parser
+├── pages/           # Astro pages
+│   └── index.astro
+├── site-config.ts   # Site metadata (name, description, etc.)
+└── types.ts         # TypeScript type definitions
+```
+
+## Adding/Editing Zines
+
+Zines are stored in `src/data/zines.csv`. To add or edit a zine, update the CSV file with:
+
+| Column | Required | Description |
+|--------|----------|-------------|
+| title | Yes | Zine title |
+| imageFilename | Yes | Image filename from `src/assets/zines/` (without extension) |
+| author | No | Author name |
+| description | No | Zine description |
+| uploadDate | No | Upload date |
+
+Image files should be placed in `src/assets/zines/` with common extensions (.png, .jpg, .jpeg, .webp).
+
+## Configuration
+
+Site-wide configuration is in `src/site-config.ts`:
+- Site name and description
+- URL
+- Social media handles
+- OG image
+
+## License
+
+MIT
