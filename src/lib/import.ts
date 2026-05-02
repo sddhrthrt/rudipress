@@ -32,6 +32,29 @@ console.log('   Has UTF-8 BOM:', hasBOM);
 const startsWithBegin = rawKey.startsWith('-----BEGIN');
 console.log('   Starts with -----BEGIN:', startsWithBegin);
 
+// Check for END marker
+const hasEndMarker = rawKey.includes('-----END PRIVATE KEY-----');
+console.log('   Has END marker:', hasEndMarker);
+
+// Extract and validate the base64 content
+const pemHeader = '-----BEGIN PRIVATE KEY-----';
+const pemFooter = '-----END PRIVATE KEY-----';
+const base64Content = rawKey.replace(pemHeader, '').replace(pemFooter, '').replace(/\n/g, '').replace(/\r/g, '');
+console.log('   Base64 content length:', base64Content.length);
+
+// Check if base64 is valid
+try {
+  const atob = require('atob');
+  const decoded = atob(base64Content);
+  console.log('   Base64 decodes OK, length:', decoded.length);
+  
+  // Check first few bytes of the decoded ASN.1 structure
+  const firstBytes = decoded.slice(0, 20).split('').map(c => c.charCodeAt(0).toString(16).padStart(2, '0')).join(' ');
+  console.log('   Decoded first 20 bytes (hex):', firstBytes);
+} catch (e) {
+  console.log('   Base64 decode fails:', e.message);
+}
+
 // Test if Node's crypto can load the key
 try {
   const crypto = await import('crypto');
