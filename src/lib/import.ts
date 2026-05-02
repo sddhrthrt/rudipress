@@ -20,6 +20,18 @@ if (!rawKey) {
 console.log('   Node.js version:', process.version);
 console.log('   Key length:', rawKey.length);
 
+// Diagnostic: Check first few bytes as hex
+const firstChars = rawKey.slice(0, 10).split('').map(c => c.charCodeAt(0).toString(16).padStart(2, '0')).join(' ');
+console.log('   First 10 bytes (hex):', firstChars);
+
+// Check for UTF-8 BOM (EF BB BF)
+const hasBOM = rawKey.charCodeAt(0) === 0xFEFF;
+console.log('   Has UTF-8 BOM:', hasBOM);
+
+// Check if it starts with BEGIN
+const startsWithBegin = rawKey.startsWith('-----BEGIN');
+console.log('   Starts with -----BEGIN:', startsWithBegin);
+
 // Test if Node's crypto can load the key
 try {
   const crypto = await import('crypto');
