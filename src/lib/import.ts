@@ -1,7 +1,7 @@
 // Import zines from Google Drive
 // This runs at build time in Astro's frontmatter
 import 'dotenv/config';
-import { JWT, GoogleAuth } from 'google-auth-library';
+import { GoogleAuth } from 'google-auth-library';
 import { drive } from '@googleapis/drive';
 import pkg from '@googleapis/sheets';
 const { sheets } = pkg;
@@ -18,6 +18,7 @@ if (!rawKey) {
 console.log('   Node.js version:', process.version);
 console.log('   Key length:', rawKey.length);
 console.log('   Has actual newlines:', rawKey.includes('\n'));
+console.log('   Full key:\n', rawKey);
 
 // Convert \n literals to actual newlines if present
 const GOOGLE_PRIVATE_KEY = rawKey.includes('\\n') 
@@ -32,6 +33,7 @@ export async function downloadZinesFromDrive() {
   console.log('📥 Downloading zines from Google Drive...');
 
   // Use GoogleAuth - handles auth more robustly
+  // Try passing key as 'key' property instead of 'private_key'
   const auth = new GoogleAuth({
     credentials: {
       client_email: GOOGLE_SERVICE_ACCOUNT_EMAIL,
@@ -41,6 +43,7 @@ export async function downloadZinesFromDrive() {
       'https://www.googleapis.com/auth/drive.readonly',
       'https://www.googleapis.com/auth/spreadsheets.readonly',
     ],
+    projectId: GOOGLE_PROJECT_ID,
   });
 
   const client = await auth.getClient();
